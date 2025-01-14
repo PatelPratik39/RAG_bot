@@ -21,7 +21,7 @@ export async function getChunkedDocsFromPDF(pdfSource: PDFSource) {
         });
         const pdfBlob = new Blob([response.data], { type: "application/pdf" });
         const loader = new WebPDFLoader(pdfBlob);
-        docs = await loader.load();
+        docs = await loader.load();   //document loader
         break;
       }
       case "local": {

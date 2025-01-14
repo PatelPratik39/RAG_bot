@@ -83,7 +83,7 @@ export default function PDFFileUpload({
           htmlFor="course-image"
           className="block text-sm font-medium leading-6 text-gray-900 dark:text-slate-50 mb-2"
         >
-          {label}
+        {label}
         </label>
         {file && (
           <button
@@ -123,7 +123,7 @@ export default function PDFFileUpload({
         <UploadButton
           className="ut-allowed-content:hidden"
           endpoint={endpoint}
-          onClientUploadComplete={(res) => {
+          onClientUploadComplete={(res: any) => {
             const item = res[0];
             const url = {
               url: item.url,
@@ -136,7 +136,7 @@ export default function PDFFileUpload({
             console.log(res);
             console.log("Upload Completed");
           }}
-          onUploadError={(error) => {
+          onUploadError={(error:any) => {
             toast.error("File Upload Failed, Try Again");
             console.log(`ERROR! ${error.message}`, error);
           }}
