@@ -1,6 +1,5 @@
-# RAG_bot
+# Full Stack RAG_bot 
 
-# RAG_bot
 
 # Features
 📁 PDF file upload and processing
@@ -15,29 +14,6 @@
 ## Introduction
 This project demonstrates how to build a chatbot capable of answering questions based on PDF content. It leverages **Next.js 13+**, **OpenAI**, **LangChain**, **Pinecone DB**, and the **Vercel AI SDK** to deliver accurate, domain-specific responses by combining Retrieval-Augmented Generation (RAG) with Large Language Models (LLMs).
 
----
-
-## Table of Contents
-- [Introduction](#introduction)
-- [What are Large Language Models (LLMs)?](#what-are-large-language-models-llms)
-  - [Challenges with LLMs](#challenges-with-llms)
-- [What is Retrieval-Augmented Generation (RAG)?](#what-is-retrieval-augmented-generation-rag)
-  - [RAG Workflow](#rag-workflow)
-  - [Benefits of RAG](#benefits-of-rag)
-- [Project Features](#project-features)
-- [Technologies Used](#technologies-used)
-- [Prerequisites](#prerequisites)
-- [Setup and Installation](#setup-and-installation)
-  - [Clone the Repository](#clone-the-repository)
-  - [Install Dependencies](#install-dependencies)
-  - [Configure Environment Variables](#configure-environment-variables)
-  - [Run the Development Server](#run-the-development-server)
-- [Core Project Components](#core-project-components)
-- [Key Commands](#key-commands)
-- [Troubleshooting](#troubleshooting)
-- [Next Steps](#next-steps)
-
----
 
 ## What are Large Language Models (LLMs)?
 LLMs, such as OpenAI's ChatGPT or Anthropic's Claude, are AI algorithms designed to process, generate, and understand human language. They can perform tasks such as:
