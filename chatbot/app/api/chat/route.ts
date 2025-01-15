@@ -8,7 +8,7 @@ import { processUserMessage } from "@/lib/langchain00";
 import { getPineconeClient } from "@/lib/pinecone-client";
 
 // Allow streaming responses up to 30 seconds
-export const maxDuration = 30;
+export const maxDuration = 60;
 
 export async function POST(req: NextRequest) {
   try {
