@@ -4,7 +4,7 @@ import { LangChainAdapter } from "ai";
 import { getVectorStore } from "@/lib/vector-store";
 import { StringOutputParser } from "@langchain/core/output_parsers";
 import { ChatOpenAI } from "@langchain/openai";
-import { processUserMessage } from "@/lib/langchain";
+import { processUserMessage } from "@/lib/langchain00";
 import { getPineconeClient } from "@/lib/pinecone-client";
 
 // Allow streaming responses up to 30 seconds
@@ -42,13 +42,14 @@ export async function POST(req: NextRequest) {
 
     // Initialize model and vector store
     const model = new ChatOpenAI({
-      modelName: "gpt-3.5-turbo",
+      modelName: "gpt-4",
       temperature: 0.1,
       streaming: true,
     });
     const pc = await getPineconeClient();
     const vectorStore = await getVectorStore(pc);
     const parser = new StringOutputParser();
+    console.log(parser);
     const stream = await processUserMessage({
       userPrompt: currentQuestion,
       conversationHistory: formattedPreviousMessages,

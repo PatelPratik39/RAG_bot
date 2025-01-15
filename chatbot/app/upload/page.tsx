@@ -4,6 +4,7 @@ import PDFFileUpload, { FileProps } from "@/components/PDFFileUploader";
 import { Button } from "@/components/ui/button";
 import { PDFSource } from "@/lib/pdf-loader";
 
+
 import { Loader2 } from "lucide-react";
 import React, { useState } from "react";
 
@@ -21,6 +22,7 @@ export default function Page() {
                 source: file?.url ?? "",
             };
             await prepare(pdfSource);
+            
             setLoading(false);
         } catch (error) {
             setLoading(false);
@@ -40,7 +42,7 @@ export default function Page() {
                                     {loadingMsg}
                                 </Button>
                             ) : (
-                                <Button onClick={() => submit()}>Upload to Pine cone</Button>
+                                    <Button variant="destructive" onClick={() => submit()}>Upload to Pinecone Vectore Database</Button>
                             )}
                         </>
                     ) : (

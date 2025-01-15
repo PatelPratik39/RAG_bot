@@ -9,7 +9,6 @@ interface ProcessMessageArgs {
   conversationHistory: string;
   vectorStore: VectorStore;
   model: ChatOpenAI;
-  persona: string; // Add persona input
 }
 
 interface ProcessMessageResponse {
@@ -17,81 +16,53 @@ interface ProcessMessageResponse {
   inquiry: string;
 }
 
-// Define a type for persona
-type Persona =
-  | "Executive Sponsor"
-  | "Implementation Lead"
-  | "Data/IT"
-  | "Team Member"
-  | "Coach";
-
-// Function to anonymize PII
-const anonymizePIIData = (data: string): string => {
-  return data
-    .replace(/\b(User ID|Email|First Name|Last Name|Job Title|School Name|School Address|School State ID|School US State Location)\b/gi, "Anonymized")
-    .replace(/\b(\w+@\w+\.\w+)\b/g, "Anonymized Email")
-    .replace(/\b(\d{1,12})\b/g, "Anonymized ID");
-};
-
-// Persona guidelines map
-const personaGuidelines = {
-  "Executive Sponsor": `Focus on providing high-level recommendations and actionable insights for decision-making. Emphasize strategic impact and alignment with goals.`,
-  "Implementation Lead": `Focus on step-by-step project execution guidance. Highlight resource allocation, communication facilitation, and training requirements.`,
-  "Data/IT": `Focus on technical details, data security, integration, and troubleshooting. Emphasize tools, systems, and user management.`,
-  "Team Member": `Provide actionable insights for day-to-day operations. Highlight practical applications of data for decision-making in their role.`,
-  "Coach": `Focus on support programs like MTSS, SEL, STEM, and instructional coaching. Highlight training, program success metrics, and actionable improvements.`,
-};
-
 export async function processUserMessage({
   userPrompt,
   conversationHistory,
   vectorStore,
   model,
-  persona,
-}: ProcessMessageArgs): Promise<ProcessMessageResponse> {
+}: ProcessMessageArgs) {
   try {
-    // Step 1: Anonymize input
-    const anonymizedPrompt = anonymizePIIData(userPrompt);
-    const anonymizedHistory = anonymizePIIData(conversationHistory);
-
-    // Step 2: Generate focused inquiry using non-streaming model
+    // Create non-streaming model for inquiry generation
     const nonStreamingModel = new ChatOpenAI({
-      modelName: "gpt-4",
+      modelName: "gpt-3.5-turbo",
       temperature: 0,
       streaming: false,
     });
 
+    // Generate focused inquiry using non-streaming model
     const inquiryResult = await inquiryPrompt
       .pipe(nonStreamingModel)
       .pipe(new StringOutputParser())
       .invoke({
-        userPrompt: anonymizedPrompt,
-        conversationHistory: anonymizedHistory,
+        userPrompt,
+        conversationHistory,
       });
 
-    // Step 3: Fetch relevant documents
+    // Get relevant documents
     const relevantDocs = await vectorStore.similaritySearch(inquiryResult, 3);
     const context = relevantDocs.map((doc) => doc.pageContent).join("\n\n");
 
-    // Step 4: Add persona-specific instructions
-    const personaGuideline = personaGuidelines[persona] || "Provide general guidance tailored to the user's role.";
+    // Generate answer using streaming model
+    // const answer = await qaPrompt
+    //   .pipe(model)
+    //   .pipe(new StringOutputParser())
+    //   .stream({
+    //     context,
+    //     question: inquiryResult,
+    //   });
 
-    // Step 5: Generate response using streaming model
-    return qaPrompt
-      .pipe(model)
-      .pipe(new StringOutputParser())
-      .stream({
-        context,
-        question: inquiryResult,
-        personaGuideline,
-      });
+    return qaPrompt.pipe(model).pipe(new StringOutputParser()).stream({
+      context,
+      question: inquiryResult,
+    });
   } catch (error) {
     console.error("Error processing message:", error);
     throw new Error("Failed to process your message");
   }
 }
 
-// Updated inquiry prompt
+// Updated prompt templates
 const inquiryPrompt = ChatPromptTemplate.fromMessages([
   [
     "system",
@@ -112,11 +83,10 @@ const inquiryPrompt = ChatPromptTemplate.fromMessages([
   ],
 ]);
 
-// Updated QA prompt
 const qaPrompt = ChatPromptTemplate.fromMessages([
   [
     "system",
-    `You are an AI Assistant specialized in providing accurate, context-based responses. Analyze the provided context carefully and follow these guidelines:
+    `You are an AI Assitant specialized in providing accurate, context-based responses. Analyze the provided context carefully and follow these guidelines:
 
     CORE RESPONSIBILITIES:
     - Base responses primarily on the provided context
@@ -136,10 +106,13 @@ const qaPrompt = ChatPromptTemplate.fromMessages([
     - Don't speculate beyond the given information
     - If the context is insufficient, explicitly state what's missing
     - Ask for clarification if the question is ambiguous
-    - Always hide PII Data such as User ID, Email Address, First Name, Last Name, Job Title, School Name, School Address, School State ID, School US State Location
+    - Always hid PII Data like User  ID (unique identifier), Email Address, First Name, Last Name , Job Title (open text), School Name, School Address, School State ID,School US State Location
 
-    PERSONA-SPECIFIC INSTRUCTIONS:
-    {personaGuideline}
+
+    When you cannot answer based on the context:
+    1. State clearly that the context lacks the necessary information
+    2. Explain what specific information would be needed
+    3. Suggest how the question might be refined
 
     Context: {context}`,
   ],
