@@ -1,9 +1,9 @@
 "use client";
-
 import { prepare } from "@/actions/prepare";
-import PDFFileUpload, { FileProps } from "@/component/PDFFileUploader";
-import { Button } from "@/component/ui/button";
+import PDFFileUpload, { FileProps } from "@/components/PDFFileUploader";
+import { Button } from "@/components/ui/button";
 import { PDFSource } from "@/lib/pdf-loader";
+
 import { Loader2 } from "lucide-react";
 import React, { useState } from "react";
 
@@ -40,12 +40,12 @@ export default function Page() {
                                     {loadingMsg}
                                 </Button>
                             ) : (
-                                    <Button  onClick={() => submit()}>Upload to Pine cone</Button>
+                                <Button onClick={() => submit()}>Upload to Pine cone</Button>
                             )}
                         </>
                     ) : (
                         <PDFFileUpload
-                            label="Upload your knoeledge-base PDF"
+                            label="Upload your Knowledge Base PDF"
                             file={file}
                             setFile={setFile}
                             endpoint="pdfUpload"

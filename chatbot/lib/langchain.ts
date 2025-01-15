@@ -86,7 +86,7 @@ const inquiryPrompt = ChatPromptTemplate.fromMessages([
 const qaPrompt = ChatPromptTemplate.fromMessages([
   [
     "system",
-    `You are an AI assistant specialized in providing accurate, context-based responses. Analyze the provided context carefully and follow these guidelines:
+    `You are an AI Coach specialized in providing accurate, context-based responses. Analyze the provided context carefully and follow these guidelines:
 
     CORE RESPONSIBILITIES:
     - Base responses primarily on the provided context
