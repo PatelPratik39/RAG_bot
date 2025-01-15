@@ -17,8 +17,7 @@ export function scrollToBottom(containerRef: React.RefObject<HTMLElement>) {
   }
 }
 
-// Reference:
-// github.com/hwchase17/langchainjs/blob/357d6fccfc78f1332b54d2302d92e12f0861c12c/examples/src/guides/expression_language/cookbook_conversational_retrieval.ts#L61
+
 export const formatChatHistory = (chatHistory: [string, string][]) => {
   const formattedDialogueTurns = chatHistory.map(
     (dialogueTurn) => `Human: ${dialogueTurn[0]}\nAssistant: ${dialogueTurn[1]}`
